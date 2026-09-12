@@ -21,11 +21,15 @@ class SpeechQueueManager {
   private processedLength = 0;
 
   constructor() {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      this.initVoices();
-      if (window.speechSynthesis.onvoiceschanged !== undefined) {
-        window.speechSynthesis.onvoiceschanged = () => this.initVoices();
+    try {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        this.initVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+          window.speechSynthesis.onvoiceschanged = () => this.initVoices();
+        }
       }
+    } catch (err) {
+      console.warn("Speech synthesis initialization notice:", err);
     }
   }
 

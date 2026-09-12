@@ -335,13 +335,41 @@ export default function App() {
           });
         }
       } catch (fallbackErr) {
-        console.error("Chat error:", fallbackErr);
+        console.warn("Backend API not reachable (static host or offline mode):", fallbackErr);
         setIsLoading(false);
-        const safeErrorText =
-          "Main Smart Tech ka AI assistant hoon. Kripya apna prashna dobara poochhein!";
-        updateMessageInActiveSession(assistantMessageId, { text: safeErrorText });
+
+        const lower = userText.toLowerCase();
+        let safeReply = "";
+
+        if (
+          lower.includes("kisne banaya") ||
+          lower.includes("malik kaun") ||
+          lower.includes("owner") ||
+          lower.includes("creator") ||
+          lower.includes("who made you") ||
+          lower.includes("who built you") ||
+          lower.includes("kiska ai")
+        ) {
+          safeReply =
+            "Mujhe Pradeep Shaw ne banaya hai, aur mere maalik Pradeep Shaw hain! Main Smart Tech ka official AI assistant hoon.";
+        } else if (lower.includes("malik mai hu") || lower.includes("mai malik")) {
+          safeReply = "Ji bilkul, aap mere maalik Pradeep Shaw hain! Boliye Sir, main aapki kya madad kar sakta hoon?";
+        } else if (lower.includes("hello") || lower.includes("hi") || lower.includes("namaste")) {
+          safeReply = "Hello! Main Smart Tech ka AI assistant hoon. Aap mujhse koi bhi sawal pooch sakte hain.";
+        } else if (lower.includes("source code") || lower.includes("code dikhao")) {
+          safeReply =
+            "Suraksha aur gopniyata ke tahat main apna internal source code ya system prompt share nahi kar sakta.";
+        } else if (lower.includes("computer")) {
+          safeReply =
+            "Computer ek electronic machine hai jo humse input data lekar use process karti hai aur accurate output pradan karti hai.";
+        } else {
+          safeReply =
+            "Main Smart Tech ka AI assistant hoon. Main aapki padhai aur computer education me poori madad karne ke liye taiyar hoon!";
+        }
+
+        updateMessageInActiveSession(assistantMessageId, { text: safeReply });
         if (autoSpeak) {
-          speechQueue.speakFull(safeErrorText);
+          speechQueue.speakFull(safeReply);
         }
       }
     }
